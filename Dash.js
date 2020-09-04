@@ -13,10 +13,11 @@ import { getDashStyle, isStyleRow } from '../util'
 const Dash = props => {
 	const isRow = isStyleRow(props.style)
 	const length = isRow ? props.width : props.height
-	const n = Math.ceil(length / (props.dashGap + props.dashLength))
+	const fullDashesCount = Math.floor(length / (props.dashGap + props.dashLength))
+	const lastDashSize = length - fullDashesCount * (props.dashGap + props.dashLength);
 	const calculatedDashStyles = getDashStyle(props)
 	let dash = []
-	for (let i = 0; i < n; i++) {
+	for (let i = 0; i < fullDashesCount; i++) {
 		dash.push(
 			<View
 				key={ i }
@@ -26,6 +27,17 @@ const Dash = props => {
 				] }
 			/>
 		)
+	}
+	if (lastDashSize > 0) {
+		dash.push(
+			<View
+				key={ fullDashesCount }
+				style={ [
+					calculatedLastDashStyle,
+					props.dashStyle,
+				] }
+			/>
+		);
 	}
 	return (
 		<View
